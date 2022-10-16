@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Finance organizer</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
+    />
+  </head>
+  <body>
+    <main class="container">
+      <nav style="margin-bottom: 20px; border-bottom: 2px solid; padding-left: 30px">
+        {% if user.is_authenticated %}
+        <ul>
+          <li><a href="{% url 'expense' %}" role="button">Add expense</a></li>
+          <li><a href="{% url 'usercategory' %}" role="button">Add Category</a></li>
+        </ul>
+        <ul>
+          <li>Welcome <b>{{ user.username }}!</b></li>
+          <li><a href="{% url 'logoutuser' %}" role="button">Logout</a></li>
+        </ul>
+        {% else %}
+        <ul>
+          <li><a href="{% url 'signupuser' %}" role="button">Sign Up</a></li>
+          <li><a href="{% url 'loginuser' %}" role="button">Login</a></li>
+        </ul>
+        {% endif %}
+      </nav>
+
+      {% for expense in expenses%}
+      <ul>
+        <li>
+          {%if not expense.done%}
+          <a href="{% url 'detail' expense.id %}" role="button" class="outline"
+            >{{expense.name}}</a
+          >
+          <a href="{% url 'set_done' expense.id %}" role="button">Mark Done</a>
+          <a href="{% url 'delete_expense' expense.id %}" role="button" class="contrast"
+            >Delete expense</a
+          >
+          {% else %}
+
+          <a href="{% url 'detail' expense.id %}" role="button" class="secondary"
+            ><s>{{expense.name}}</s></a
+          >
+          {% endif %}
+        </li>
+      </ul>
+      {% endfor %}
+    </main>
+  </body>
+</html>

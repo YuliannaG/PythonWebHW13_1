@@ -1,0 +1,18 @@
+{% extends "financeapp/base.html" %}
+
+{% block content %}
+
+<h1>{{expense.name}}</h1>
+<p>Description: <b>{{expense.description}}</b></p>
+<p>Time of creation: <kbd>{{expense.created}}</kbd></p>
+{% if expense.done %}
+<p>Status: <ins>Completed</ins></p>
+{% else %}
+<p>Status: <i>Not implemented</i></p>
+{% endif %}
+
+<p>Categories: <small>
+  {{ expense.category_list }}
+</small></p>
+
+{% endblock %}

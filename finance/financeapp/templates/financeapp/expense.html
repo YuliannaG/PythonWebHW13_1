@@ -1,0 +1,45 @@
+{% extends "financeapp/base.html" %}
+
+{% block content %}
+
+    {% if error %}
+    <div>
+        <mark>{{ error }}</mark>
+    </div>
+    {% endif %}
+    <form method="POST" action="{% url 'expense' %}">
+        {% csrf_token %}
+        <div style="padding: 10px">
+            <label
+            >Date:
+                <input type="date" name="created" required/>
+            </label>
+        </div>
+        <div style="padding: 10px">
+            <label
+            >Expense amount:
+                <input type="number" name="sum" required/>
+            </label>
+        </div>
+        <div style="padding: 10px">
+            <label
+            >Expense description:
+                <input type="text" name="description" required/>
+            </label>
+        </div>
+        <div style="padding: 10px">
+            <label
+            >Select Category:
+                <select name="categories" multiple="multiple" required>
+                    {% for category in categories %}
+                    <option value="{{category.name}}">{{category.name}}</option>
+                    {% endfor %}
+                </select>
+            </label>
+        </div>
+        <div class="grid">
+            <button type="submit">Submit</button>
+            <button type="reset" class="secondary">Reset</button>
+        </div>
+    </form>
+{% endblock %}
