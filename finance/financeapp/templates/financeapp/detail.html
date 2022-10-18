@@ -12,7 +12,9 @@
 {% endif %}
 
 <p>Categories: <small>
-  {{ expense.category_list }}
+  {% for cat in expense.category.all %}
+    <span> {{cat.name}} </span>
+  {% endfor %}
 </small></p>
 
 {% endblock %}

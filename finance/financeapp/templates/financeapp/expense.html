@@ -10,8 +10,7 @@
     <form method="POST" action="{% url 'expense' %}">
         {% csrf_token %}
         <div style="padding: 10px">
-            <label
-            >Date:
+            <label>Date:
                 <input type="date" name="created" required/>
             </label>
         </div>
@@ -30,9 +29,9 @@
         <div style="padding: 10px">
             <label
             >Select Category:
-                <select name="categories" multiple="multiple" required>
-                    {% for category in categories %}
-                    <option value="{{category.name}}">{{category.name}}</option>
+                <select name="category" multiple="multiple" required>
+                    {% for cat in categories %}
+                    <option value="{{cat.id}}">{{cat.name}}</option>
                     {% endfor %}
                 </select>
             </label>
