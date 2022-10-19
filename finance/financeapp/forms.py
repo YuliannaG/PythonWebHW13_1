@@ -11,4 +11,4 @@ class CategoryForm(ModelForm):
 class ExpenseForm(ModelForm):
     class Meta:
         model = Expense
-        fields = ['sum', 'description', 'created', 'category']
+        fields = ['sum', 'description', 'category','created']

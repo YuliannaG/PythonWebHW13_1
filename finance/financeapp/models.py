@@ -21,8 +21,8 @@ class Expense(models.Model):
     description = models.CharField(max_length=150, null=True, blank=True)
     # done = models.BooleanField(default=False)
     created = models.DateField(null=False)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ManyToManyField(Category)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.sum}:{self.category}"
+        return f"{self.sum}"

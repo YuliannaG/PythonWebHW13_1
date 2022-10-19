@@ -3,6 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from datetime import datetime
 from .models import Category, Expense, User
 from .forms import CategoryForm, ExpenseForm
 
@@ -41,23 +42,24 @@ def category(request):
 
 @login_required
 def expense(request):
-    categories = Category.objects.filter(user_id=request.user).all()
-
     if request.method == 'POST':
+        form = ExpenseForm(request.POST)
         try:
-            # list_categories = request.POST.getlist('categories')
-            form = ExpenseForm(request.POST)
-            new_expense = form.save(commit=False)
-            new_expense.user_id = request.user
-            new_expense.save()
-            # choice_categories = Category.objects.filter(name__in=list_categories, user_id=request.user)  # WHERE name in []
-            # for category in choice_categories.iterator():
-            #     new_expense.category.add(category)
-            return redirect(to='main')
+            if form.is_valid():
+                new_expense: Expense
+                new_expense = form.save(commit=False)
+                new_expense.user_id = request.user
+                new_expense.save()
+                categories = Category.objects.filter(pk__in = request.POST.getlist('category'))
+                new_expense.category.set(categories)
+                return redirect(to='main')
         except ValueError as err:
-            return render(request, 'financeapp/expense.html', {'form': ExpenseForm(), 'error': err})
-
-    return render(request, 'financeapp/expense.html', {'form': ExpenseForm()})
+            return render(request, 'financeapp/expense.html', {'form': form, 'error': err})
+    else:
+        categories = Category.objects.filter(user_id=request.user).all()
+        form = ExpenseForm()
+    
+    return render(request, 'financeapp/expense.html', {'form': form, 'categories': categories})
 
 
 @login_required
