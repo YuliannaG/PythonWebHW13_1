@@ -12,13 +12,13 @@ from .forms import CategoryForm, ExpenseForm
 def main(request):
     expenses = []
     if request.user.is_authenticated:
-        expenses = Expense.objects.filter(user_id=request.user).all()
+        expenses = Expense.objects.filter(user_id=request.user).order_by('created').all()
+        print(expenses)
     return render(request, 'financeapp/index.html', {"expenses": expenses})
 
 
 @login_required
 def detail(request, expense_id):
-    # expense = Expense.objects.get(pk=expense_id, user_id=request.user)
     expense = get_object_or_404(Expense, pk=expense_id, user_id=request.user)
     # expense.category_list = ', '.join([str(name) for name in expense.category.all()])
     return render(request, 'financeapp/detail.html', {"expense": expense})
@@ -36,7 +36,8 @@ def category(request):
         except ValueError as err:
             return render(request, 'financeapp/category.html', {'form': CategoryForm(), 'error': err})
         except IntegrityError as err:
-            return render(request, 'financeapp/category.html', {'form': CategoryForm(), 'error': 'Category will be unique!'})
+            return render(request, 'financeapp/category.html',
+                          {'form': CategoryForm(), 'error': 'Category will be unique!'})
     return render(request, 'financeapp/category.html', {'form': CategoryForm()})
 
 
@@ -50,16 +51,43 @@ def expense(request):
                 new_expense = form.save(commit=False)
                 new_expense.user_id = request.user
                 new_expense.save()
-                # categories = Category.objects.filter(pk__in = request.POST.get('category'))
-                # new_expense.category.set(categories)
                 return redirect(to='main')
         except ValueError as err:
             return render(request, 'financeapp/expense.html', {'form': form, 'error': err})
     else:
         categories = Category.objects.filter(user_id=request.user).all()
         form = ExpenseForm()
-    
+
     return render(request, 'financeapp/expense.html', {'form': form, 'categories': categories})
+
+
+@login_required
+def reports(request):
+    categories = Category.objects.filter(user_id=request.user).all()
+    if request.method == 'POST':
+        try:
+            start_date = request.POST.get('start_date')
+            end_date = request.POST.get('end_date')
+            report_records = []
+            if request.user.is_authenticated:
+                if request.POST.get('cat_check'):
+                    report_records = Expense.objects.filter(user_id=request.user, created__range=[start_date, end_date],
+                                                            category=request.POST.get('category')).all()
+                else:
+                    report_records = Expense.objects.filter(user_id=request.user,
+                                                            created__range=[start_date, end_date]).all()
+                total_amount = 0
+                for record in report_records:
+                    rec_sum = float(record.sum)
+                    total_amount += rec_sum
+                return render(request, 'financeapp/reports.html', {"report_records": report_records,
+                                                                       'categories': categories,
+                                                                       'total_amount': total_amount})
+        except ValueError as err:
+            categories = Category.objects.filter(user_id=request.user).all()
+            return render(request, 'financeapp/reports.html', {'categories': categories})
+
+    return render(request, 'financeapp/reports.html', {'categories': categories})
 
 
 @login_required

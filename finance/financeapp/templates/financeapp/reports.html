@@ -1,0 +1,45 @@
+{% extends "financeapp/base.html" %}
+
+{% block content %}
+
+      {% if error %}
+      <div>
+        <mark>{{ error }}</mark>
+      </div>
+      {% endif %}
+      <form method="POST" action="{% url 'userreports' %}">
+        {% csrf_token %}
+        <div style="padding: 10px">
+          <label
+            >Enter the start date:
+            <input type="date" name="start_date" required />
+          </label>
+          <label
+            >Enter the end date:
+            <input type="date" name="end_date" required />
+          </label>
+          <label><input name= 'cat_check' type="checkbox"> By category: </label>
+          <label
+            >Select Category:
+                <select name="category">
+                    {% for cat in categories %}
+                    <option value="{{cat.id}}">{{cat.name}}</option>
+                    {% endfor %}
+                </select>
+            </label>
+        </div>
+        <div class="grid">
+          <button type="submit">Submit</button>
+          <button type="reset" class="secondary">Reset</button>
+        </div>
+      </form>
+
+      {% for record in report_records%}
+        <ul>
+          <li>
+             <pre>{{record.created}} | CAD {{record.sum|floatformat:2}} | {{record.category}}</pre>
+          </li>
+        </ul>
+      {% endfor %}
+      <div><b>Total amount: {{total_amount|floatformat:2}}</b></div>
+{% endblock %}

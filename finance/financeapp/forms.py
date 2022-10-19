@@ -12,3 +12,5 @@ class ExpenseForm(ModelForm):
     class Meta:
         model = Expense
         fields = ['sum', 'description', 'category', 'created']
+
+
