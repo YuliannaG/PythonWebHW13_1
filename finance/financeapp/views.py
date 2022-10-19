@@ -50,8 +50,8 @@ def expense(request):
                 new_expense = form.save(commit=False)
                 new_expense.user_id = request.user
                 new_expense.save()
-                categories = Category.objects.filter(pk__in = request.POST.getlist('category'))
-                new_expense.category.set(categories)
+                # categories = Category.objects.filter(pk__in = request.POST.get('category'))
+                # new_expense.category.set(categories)
                 return redirect(to='main')
         except ValueError as err:
             return render(request, 'financeapp/expense.html', {'form': form, 'error': err})

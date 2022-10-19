@@ -2,19 +2,10 @@
 
 {% block content %}
 
-<h1>{{expense.name}}</h1>
-<p>Description: <b>{{expense.description}}</b></p>
-<p>Time of creation: <kbd>{{expense.created}}</kbd></p>
-{% if expense.done %}
-<p>Status: <ins>Completed</ins></p>
-{% else %}
-<p>Status: <i>Not implemented</i></p>
-{% endif %}
-
-<p>Categories: <small>
-  {% for cat in expense.category.all %}
-    <span> {{cat.name}} </span>
-  {% endfor %}
-</small></p>
+<p>Amount: <b>CAD {{expense.sum|floatformat:2}}</b></p>
+<p>Description/ Store: <b>{{expense.description}}</b></p>
+<p>Date: <b>{{expense.created}}</b></p>
+<p>Category: <b> {{expense.category.name}}</b></p>
+</b></p>
 
 {% endblock %}

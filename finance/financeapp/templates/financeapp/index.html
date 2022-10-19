@@ -31,20 +31,12 @@
       {% for expense in expenses%}
       <ul>
         <li>
-          {%if not expense.done%}
           <a href="{% url 'detail' expense.id %}" role="button" class="outline"
-            >{{expense.name}}</a
+            >CAD {{expense.sum|floatformat:2}} for {{expense.category}}</a
           >
-          <a href="{% url 'set_done' expense.id %}" role="button">Mark Done</a>
           <a href="{% url 'delete_expense' expense.id %}" role="button" class="contrast"
             >Delete expense</a
           >
-          {% else %}
-
-          <a href="{% url 'detail' expense.id %}" role="button" class="secondary"
-            ><s>{{expense.name}}</s></a
-          >
-          {% endif %}
         </li>
       </ul>
       {% endfor %}

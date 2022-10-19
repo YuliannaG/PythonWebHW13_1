@@ -13,15 +13,15 @@ class Category(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.name}:{self.user_id}"
+        return f"{self.name}"
 
 
 class Expense(models.Model):
-    sum = models.IntegerField(null=False)
+    sum = models.FloatField(null=False)
     description = models.CharField(max_length=150, null=True, blank=True)
     # done = models.BooleanField(default=False)
     created = models.DateField(null=False)
-    category = models.ManyToManyField(Category)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):

@@ -22,14 +22,14 @@
         </div>
         <div style="padding: 10px">
             <label
-            >Expense description:
+            >Expense description/ store name:
                 <input type="text" name="description" required/>
             </label>
         </div>
         <div style="padding: 10px">
             <label
             >Select Category:
-                <select name="category" multiple="multiple" required>
+                <select name="category" required>
                     {% for cat in categories %}
                     <option value="{{cat.id}}">{{cat.name}}</option>
                     {% endfor %}
